@@ -16,11 +16,6 @@ let coinsNumber = 10;
 let bullets = [];
 let bulletIntervalId = 0;
 
-// sound effects
-let coinSound;
-let shootSound;
-let alarmSound;
-
 // checkboxes
 let coinAnimated;
 let coinAnimatedBool = true;
@@ -30,15 +25,6 @@ let recoil;
 let recoilBool = true;
 let warning;
 let warningBool = true;
-let soundEffect;
-let soundEffectBool = true;
-
-function preload() {
-  // load sounds
-  coinSound = loadSound("coin-1.mp3");
-  shootSound = loadSound("laser12.mp3");
-  alarmSound = loadSound("alarm.oga");
-}
 
 function setup() {
   createCanvas(canvasWidth, canvasHeight);
@@ -59,8 +45,6 @@ function setup() {
   recoil.changed(recoilEvent);
   warning = createCheckbox("Warning", true);
   warning.changed(warningEvent);
-  soundEffect = createCheckbox("Sound Effect", true);
-  soundEffect.changed(soundEffectEvent);
 
   noStroke();
   rectMode(CENTER);
@@ -84,16 +68,6 @@ function draw() {
     scoreColor = color(255, 0, 0);
   } else {
     scoreColor = color(50, 220, 50);
-  }
-
-  // alarm sound
-  if (soundEffect) {
-    if (attacked && !alarmSound.isLooping()) {
-      alarmSound.loop();
-    }
-    if (!attacked) {
-      alarmSound.stop();
-    }
   }
 
   // draw objects
@@ -162,19 +136,11 @@ function mousePressed() {
       player.recoil(direction);
     }
   }, 50);
-
-  if (soundEffectBool) {
-    shootSound.loop();
-  }
 }
 
 function mouseReleased() {
   clearInterval(bulletIntervalId);
   bulletIntervalId = 0;
-
-  if (soundEffectBool) {
-    shootSound.stop();
-  }
 }
 
 function detectCollision() {
@@ -206,9 +172,6 @@ function detectCollision() {
         player.size / 2 + coin.size / 2
     ) {
       player.collect();
-      if (soundEffectBool) {
-        coinSound.play();
-      }
 
       coin.consumed = true;
 
@@ -265,8 +228,4 @@ function recoilEvent() {
 
 function warningEvent() {
   warningBool = this.checked();
-}
-
-function soundEffectEvent() {
-  soundEffectBool = this.checked();
 }
